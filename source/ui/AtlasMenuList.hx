@@ -15,7 +15,7 @@ class AtlasMenuList extends MenuTypedList<AtlasMenuItem>
 		super(navControls, wrapMode);
 		
 		if (Std.isOfType(atlas, String))
-			this.atlas = Paths.getSparrowAtlas(cast atlas);
+			this.atlas = backend.Paths.getSparrowAtlas(cast atlas);
 		else
 			this.atlas = cast atlas;
 	}

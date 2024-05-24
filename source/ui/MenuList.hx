@@ -75,7 +75,7 @@ class MenuTypedList<T:MenuItem> extends FlxTypedGroup<T>
 	
 	inline function updateControls()
 	{
-		var controls = PlayerSettings.player1.controls;
+		var controls = backend.PlayerSettings.player1.controls;
 		
 		var wrapX = wrapMode.match(Horizontal | Both);
 		var wrapY = wrapMode.match(Vertical | Both);
@@ -91,7 +91,7 @@ class MenuTypedList<T:MenuItem> extends FlxTypedGroup<T>
 		
 		if (newIndex != selectedIndex)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+			FlxG.sound.play(backend.Paths.sound('scrollMenu'));
 			selectItem(newIndex);
 		}
 		
@@ -168,7 +168,7 @@ class MenuTypedList<T:MenuItem> extends FlxTypedGroup<T>
 		else
 		{
 			busy = true;
-			FlxG.sound.play(Paths.sound('confirmMenu'));
+			FlxG.sound.play(backend.Paths.sound('confirmMenu'));
 			FlxFlicker.flicker(selected, 1, 0.06, true, false, function(_)
 			{
 				busy = false;

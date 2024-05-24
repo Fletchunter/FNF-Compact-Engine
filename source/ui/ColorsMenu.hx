@@ -10,18 +10,18 @@ class ColorsMenu extends ui.OptionsState.Page
 {
 	var curSelected:Int = 0;
 
-	var grpNotes:FlxTypedGroup<Note>;
+	var grpNotes:FlxTypedGroup<objects.Note>;
 
 	public function new()
 	{
 		super();
 
-		grpNotes = new FlxTypedGroup<Note>();
+		grpNotes = new FlxTypedGroup<objects.Note>();
 		add(grpNotes);
 
 		for (i in 0...4)
 		{
-			var note:Note = new Note(0, i);
+			var note:objects.Note = new objects.Note(0, i);
 
 			note.x = (100 * i) + i;
 			note.screenCenter(Y);
@@ -57,13 +57,13 @@ class ColorsMenu extends ui.OptionsState.Page
 		if (controls.UI_UP)
 		{
 			grpNotes.members[curSelected].colorSwap.update(elapsed * 0.3);
-			Note.arrowColors[curSelected] += elapsed * 0.3;
+			objects.Note.arrowColors[curSelected] += elapsed * 0.3;
 		}
 
 		if (controls.UI_DOWN)
 		{
 			grpNotes.members[curSelected].colorSwap.update(-elapsed * 0.3);
-			Note.arrowColors[curSelected] += -elapsed * 0.3;
+			objects.Note.arrowColors[curSelected] += -elapsed * 0.3;
 		}
 
 		super.update(elapsed);

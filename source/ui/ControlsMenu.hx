@@ -1,6 +1,6 @@
 package ui;
 
-import Controls;
+import backend.Controls;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -196,7 +196,7 @@ class ControlsMenu extends ui.OptionsState.Page
 	{
 		super.update(elapsed);
 
-		var controls = PlayerSettings.player1.controls;
+		var controls = backend.PlayerSettings.player1.controls;
 		if (controlGrid.enabled && deviceList != null && deviceListSelected == false && controls.BACK)
 			goToDeviceList();
 
@@ -251,7 +251,7 @@ class ControlsMenu extends ui.OptionsState.Page
 					if (otherItem != item && otherItem.input == input)
 					{
 						// replace that input with this items old input.
-						PlayerSettings.player1.controls.replaceBinding(otherItem.control, currentDevice, item.input, otherItem.input);
+						backend.PlayerSettings.player1.controls.replaceBinding(otherItem.control, currentDevice, item.input, otherItem.input);
 						// Don't use resetItem() since items share names/labels
 						otherItem.input = item.input;
 						otherItem.label.text = item.label.text;
@@ -260,12 +260,12 @@ class ControlsMenu extends ui.OptionsState.Page
 			}
 		}
 
-		PlayerSettings.player1.controls.replaceBinding(item.control, currentDevice, input, item.input);
+		backend.PlayerSettings.player1.controls.replaceBinding(item.control, currentDevice, input, item.input);
 		// Don't use resetItem() since items share names/labels
 		item.input = input;
 		item.label.text = item.getLabel(input);
 
-		PlayerSettings.player1.saveControls();
+		backend.PlayerSettings.player1.saveControls();
 	}
 
 	function closePrompt()
@@ -333,7 +333,7 @@ class InputItem extends TextMenuItem
 
 	function getInput()
 	{
-		var list = PlayerSettings.player1.controls.getInputsFor(control, device);
+		var list = backend.PlayerSettings.player1.controls.getInputsFor(control, device);
 		if (list.length > index)
 		{
 			if (list[index] != FlxKey.ESCAPE || list[index] != FlxGamepadInputID.BACK)
@@ -349,6 +349,6 @@ class InputItem extends TextMenuItem
 
 	public function getLabel(input:Int)
 	{
-		return input == -1 ? "---" : InputFormatter.format(input, device);
+		return input == -1 ? "---" : backend.InputFormatter.format(input, device);
 	}
 }

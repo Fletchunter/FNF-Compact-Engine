@@ -1,5 +1,6 @@
 package ui;
 
+import backend.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -8,8 +9,8 @@ import flixel.group.FlxGroup;
 import flixel.util.FlxSignal;
 
 // typedef OptionsState = OptionsMenu_old;
-// class OptionsState_new extends MusicBeatState
-class OptionsState extends MusicBeatState
+// class OptionsState_new extends backend.MusicBeatState
+class OptionsState extends backend.MusicBeatState
 {
 	var pages = new Map<PageName, Page>();
 	var currentName:PageName = Options;
@@ -20,7 +21,7 @@ class OptionsState extends MusicBeatState
 
 	override function create()
 	{
-		var menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var menuBG = new FlxSprite().loadGraphic(backend.Paths.image('menuDesat'));
 		menuBG.color = 0xFFea71fd;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
@@ -37,13 +38,13 @@ class OptionsState extends MusicBeatState
 		{
 			options.onExit.add(exitToMainMenu);
 			controls.onExit.add(switchPage.bind(Options));
-			// colors.onExit.add(switchPage.bind(Options));
+			// colors.onExit.add(switchPage.bind(options.Options));
 			preferences.onExit.add(switchPage.bind(Options));
 
 		}
 		else
 		{
-			// No need to show Options page
+			// No need to show options.Options page
 			controls.onExit.add(exitToMainMenu);
 			setPage(Controls);
 		}
@@ -84,15 +85,15 @@ class OptionsState extends MusicBeatState
 	{
 		// Todo animate?
 		setPage(name);
-		PlayerPrefs.saveSettings();
+		backend.PlayerPrefs.saveSettings();
 	}
 
 	function exitToMainMenu()
 	{
 		currentPage.enabled = false;
 		// Todo animate?
-		FlxG.switchState(new MainMenuState());
-		PlayerPrefs.saveSettings();
+		FlxG.switchState(new states.MainMenuState());
+		backend.PlayerPrefs.saveSettings();
 	}
 }
 
@@ -104,10 +105,10 @@ class Page extends FlxGroup
 	public var enabled(default, set) = true;
 	public var canExit = true;
 
-	var controls(get, never):Controls;
+	var controls(get, never):backend.Controls;
 
 	inline function get_controls()
-		return PlayerSettings.player1.controls;
+		return backend.PlayerSettings.player1.controls;
 
 	var subState:FlxSubState;
 
@@ -133,9 +134,9 @@ class Page extends FlxGroup
 	{
 		if (canExit && controls.BACK)
 		{
-			PlayerPrefs.saveSettings();
+			backend.PlayerPrefs.saveSettings();
 			
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.sound.play(backend.Paths.sound('cancelMenu'));
 			exit();
 		}
 	}

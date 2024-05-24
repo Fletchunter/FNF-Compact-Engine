@@ -26,11 +26,11 @@ class FlxAnimate extends FlxSymbol
 	public function new(x:Float, y:Float)
 	{
 		var folder:String = 'tightBars';
-		coolParse = cast Json.parse(Assets.getText(Paths.file('images/' + folder + '/Animation.json')));
+		coolParse = cast Json.parse(Assets.getText(backend.Paths.file('images/' + folder + '/Animation.json')));
 		coolParse.AN.TL.L.reverse();
 		super(x, y, coolParse);
 
-		frames = FlxAnimate.fromAnimate(Paths.file('images/' + folder + '/spritemap1.png'), Paths.file('images/' + folder + '/spritemap1.json'));
+		frames = FlxAnimate.fromAnimate(backend.Paths.file('images/' + folder + '/spritemap1.png'), backend.Paths.file('images/' + folder + '/spritemap1.json'));
 		// frames
 	}
 

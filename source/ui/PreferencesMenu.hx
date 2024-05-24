@@ -29,7 +29,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 	{
 		super();
 
-		menuCamera = new SwagCamera();
+		menuCamera = new backend.SwagCamera();
 		FlxG.cameras.add(menuCamera, false);
 		menuCamera.bgColor = 0x0;
 		camera = menuCamera;
@@ -60,20 +60,20 @@ class PreferencesMenu extends ui.OptionsState.Page
 	}
 
 	/*public static function getPref(pref:String):Dynamic {
-		return PlayerPrefs.getPref(pref);
+		return backend.PlayerPrefs.getPref(pref);
 	}
 	
 	public static function setPref(pref:String, value:Dynamic):Void {
-		PlayerPrefs.setPref(pref, value);
+		backend.PlayerPrefs.setPref(pref, value);
 	}*/
 
 	public static function getPref(pref:String):Dynamic {
-        return Reflect.getProperty(PlayerPrefs, pref);
+        return Reflect.getProperty(backend.PlayerPrefs, pref);
         trace(pref);
     }
     
     public static function setPref(pref:String, value:Dynamic):Void {
-        Reflect.setProperty(PlayerPrefs, pref, value);
+        Reflect.setProperty(backend.PlayerPrefs, pref, value);
         trace(pref);
     }
 	
@@ -97,7 +97,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		#end
 		
 
-		FlxG.autoPause = PlayerPrefs.autoPause;
+		FlxG.autoPause = backend.PlayerPrefs.autoPause;
 	}
 	*/
 	
@@ -147,22 +147,22 @@ class PreferencesMenu extends ui.OptionsState.Page
 		checkboxes[items.selectedIndex].daValue = daSwap;
 		trace('toggled? ' + daSwap);
 	
-		if (PlayerPrefs.fpsCounter) {
+		if (backend.PlayerPrefs.fpsCounter) {
 			    FlxG.stage.addChild(Main.fpsCounter);
 			} else {
 				FlxG.stage.removeChild(Main.fpsCounter);
 			}
 			
-			FlxG.autoPause = PlayerPrefs.autoPause;
+			FlxG.autoPause = backend.PlayerPrefs.autoPause;
 	
-		PlayerPrefs.saveSettings(); // Save all preferences to JSON
+		backend.PlayerPrefs.saveSettings(); // Save all preferences to JSON
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		// menuCamera.followLerp = CoolUtil.camLerpShit(0.05);
+		// menuCamera.followLerp = backend.CoolUtil.camLerpShit(0.05);
 
 		items.forEach(function(daItem:TextMenuItem)
 		{
@@ -195,7 +195,7 @@ class CheckboxThingie extends FlxSprite
 	{
 		super(x, y);
 
-		frames = Paths.getSparrowAtlas('checkboxThingie');
+		frames = backend.Paths.getSparrowAtlas('checkboxThingie');
 		animation.addByPrefix('static', 'Check Box unselected', 24, false);
 		animation.addByPrefix('checked', 'Check Box selecting animation', 24, false);
 
