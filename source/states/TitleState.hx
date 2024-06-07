@@ -287,7 +287,6 @@ class TitleState extends backend.MusicBeatState
 
 		FlxG.stage.removeChild(overlay);
 	}
-
 	var logoBl:FlxSprite;
 
 	var gfDance:FlxSprite;
@@ -403,8 +402,10 @@ class TitleState extends backend.MusicBeatState
 		else
 			initialized = true;
 
+		/**
 		if (FlxG.sound.music != null)
-			FlxG.sound.music.onComplete = function() FlxG.switchState(new VideoState());
+		FlxG.sound.music.onComplete = function() FlxG.switchState(new VideoState());
+		*/
 
 		startedIntro = true;
 		// credGroup.add(credTextShit);

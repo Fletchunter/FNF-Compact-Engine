@@ -13,6 +13,7 @@ import openfl.events.NetStatusEvent;
 import openfl.media.Video;
 import openfl.net.NetConnection;
 import openfl.net.NetStream;
+import openfl.system.System;
 
 class Main extends Sprite
 {
@@ -81,14 +82,16 @@ class Main extends Sprite
 		initialState = states.TitleState;
 		#end
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, /*zoom*/ framerate, framerate, skipSplash, startFullscreen));
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, /*zoom*/ framerate, skipSplash, startFullscreen));
 
 		#if !mobile
 		fpsCounter = new FPS(10, 3, 0xFFFFFF);
 
-		if (backend.PlayerPrefs.fpsCounter)
+		if (backend.PlayerPrefs.fpsCounter) {
 			addChild(fpsCounter);
+		}
 
+		trace(flixel.util.FlxStringUtil.formatBytes(cast(System.totalMemory, UInt)));
 		#end
 
 		/* 

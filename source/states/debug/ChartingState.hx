@@ -484,9 +484,11 @@ class ChartingState extends backend.MusicBeatState
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
 		{
+			/**
 			trace(curStep);
 			trace((_song.notes[curSection].lengthInSteps) * (curSection + 1));
 			trace('DUMBSHIT');
+			**/
 
 			if (_song.notes[curSection + 1] == null)
 			{
@@ -505,7 +507,7 @@ class ChartingState extends backend.MusicBeatState
 			{
 				if (FlxG.mouse.overlaps(note))
 				{
-					// setSelectedNote();
+					// trace(note.strumTime);
 				}
 			});
 		}
@@ -531,10 +533,11 @@ class ChartingState extends backend.MusicBeatState
 						}
 						else
 						{
-							trace('tryin to delete note...');
-							setSelectedNote();
+							// trace('tryin to delete note...');
+							var getNoteData = Math.floor(FlxG.mouse.x / GRID_SIZE);
+							setSelectedNote(note.strumTime, getNoteData, note.sustainLength, curSelectedNote[3]);
 							deleteNote(note);
-							trace("Current Selected Note: " + curSelectedNote);
+                            // trace("Current Selected Note: " + curSelectedNote);
 						}
 					}
 				});
@@ -704,6 +707,11 @@ class ChartingState extends backend.MusicBeatState
 				curSelectedNote[2] += value;
 				curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
 			}
+			if (selectedNote[2] != null)
+			{
+				selectedNote[2] += value;
+				selectedNote[2] = Math.max(selectedNote[2], 0);
+			}
 		}
 
 		updateNoteUI();
@@ -716,12 +724,21 @@ class ChartingState extends backend.MusicBeatState
 		{
 			if (curSelectedNote[3] != null)
 			{
-				trace('ALT NOTE SHIT');
+				// trace('ALT NOTE SHIT');
 				curSelectedNote[3] = !curSelectedNote[3];
-				trace(curSelectedNote[3]);
+				// trace(curSelectedNote[3]);
 			}
 			else
 				curSelectedNote[3] = true;
+
+			if (selectedNote[3] != null)
+			{
+				// trace('ALT NOTE SHIT for selected note');
+				selectedNote[3] = !selectedNote[3];
+				// trace(selectedNote[3]);
+			}
+			else
+                selectedNote[3] = true;
 		}
 	}
 
@@ -769,7 +786,7 @@ class ChartingState extends backend.MusicBeatState
 
 	function changeSection(sec:Int = 0, ?updateMusic:Bool = true):Void
 	{
-		trace('changing section' + sec);
+		// trace('changing section' + sec);
 
 		if (_song.notes[sec] != null)
 		{
@@ -947,27 +964,72 @@ class ChartingState extends backend.MusicBeatState
 		updateGrid();
 		updateNoteUI();
 	}
+	
 
 	function deleteNote(note:objects.Note):Void
 	{
 		var sectionNoteData = _song.notes[curSection].sectionNotes;
+		var noteToRemove:Array<Dynamic> = selectedNote;
+		var found:Bool = false;
+		var i:Int = 0;
 
-		for (i in 0...sectionNoteData.length) {
+		/**
+		// wow i just make myself complicated when there is an easy method well atleast i figured it out
+		var daSelectedNote:Array<Dynamic> = selectedNote;
+		var noteToRemove = findNearestSectionData(sectionNoteData, daSelectedNote);
+		**/
+
+		/**
+		var filteredArray = sectionNoteData.filter(function(noteData) {
+			return noteData[1] == curNoteData;
+		});
+
+		trace(filteredArray);
+		**/
+
+		trace(sectionNoteData);
+		trace(noteToRemove); 
+
+		while (i < sectionNoteData.length && !found) {
 			var allNote = sectionNoteData[i];
-			var noteToRemove:Array<Dynamic> = selectedNote;
-			
-			if (allNote[0] == noteToRemove[0] && allNote[1] == noteToRemove[1] /*&& allNote[2] == noteToRemove[2] && allNote[3] == noteToRemove[3]*/ ) {
-				var index:Int = i;
-			
-				if (index != -1) {
-					_song.notes[curSection].sectionNotes.splice(index, 1);
-					break;
-				}
+			if (allNote[0] == noteToRemove[0] && allNote[1] == noteToRemove[1] && allNote[2] == noteToRemove[2] && allNote[3] == noteToRemove[3]) {
+				_song.notes[curSection].sectionNotes.splice(i, 1);
+				found = true;
+			} else {
+				i++;
 			}
 		}
 
 		updateGrid();
 	}
+
+	/**
+	function findNearestSectionData(section:Array<Dynamic>, valueToFind:Array<Dynamic>):Array<Dynamic> {
+		var closestIndex:Int = -1;
+		var closestDifference:Float = 1.7976931348623157e+308;
+		var i:Int = 0;
+	
+		while (i < section.length) {
+			var difference:Float = sectionStartTime();
+			var j:Int = 0;
+	
+			while (j < valueToFind.length) {
+				difference += Math.abs(section[i][j] - valueToFind[j]);
+				j++;
+			}
+
+			if (difference < closestDifference) {
+				closestDifference = difference;
+				closestIndex = i;
+			}
+
+			i++;
+		}
+
+		return closestIndex != -1 ? section[closestIndex] : null;
+	}
+	**/
+
 
 	function clearSection():Void
 	{
@@ -1002,9 +1064,11 @@ class ChartingState extends backend.MusicBeatState
 			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteAlt]);
 		}
 
+		/**
 		trace("Note strum: " + noteStrum);
 		trace("Current section: " + curSection);
 		trace("Note Data: " + noteData);
+		**/
 
 		updateGrid();
 		updateNoteUI();
@@ -1012,11 +1076,11 @@ class ChartingState extends backend.MusicBeatState
 		autosaveSong();
 	} 
 
-	private function setSelectedNote():Void {
-		var noteStrum = getStrumTime(dummyArrow.y) + sectionStartTime();
-		var noteData = Math.floor(FlxG.mouse.x / GRID_SIZE);
-		var noteSus = 0;
-		var noteAlt = false;
+	private function setSelectedNote(strum:Float, data:Int, sustain:Float, type:Bool):Void {
+		var noteStrum = strum;
+		var noteData = data;
+		var noteSus = sustain;
+		var noteAlt = type;
 
 		var foundNotes:Array<Dynamic> = [];
 
@@ -1034,11 +1098,7 @@ class ChartingState extends backend.MusicBeatState
 		if (foundNotes != null)
 		{
 			selectedNote = foundNotes;
-			trace("Setting Selected Note: " + selectedNote);
-		}
-		else
-		{
-			trace("No matching note found for the current mouse position. \n" + "Note Strum: " + noteStrum + " Note Data: " + noteData + " Note Sus: " + noteSus + " Note Alt: " + noteAlt);
+			// trace("Setting Selected Note: " + selectedNote);
 		}
 
 		updateGrid();
